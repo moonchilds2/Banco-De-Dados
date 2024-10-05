@@ -1,0 +1,151 @@
+CREATE TABLE tabela(
+
+	id_nf INTEGER NOT NULL,
+	id_item INTEGER NOT NULL,
+	cod_prod INTEGER NOT NULL,
+	valor_unit NUMERIC(5,2) NOT NULL,
+	quantidade INTEGER NOT NULL,
+	desconto INTEGER
+
+);
+
+
+INSERT INTO tabela VALUES(1, 1, 1, 25.00, 10, 5);
+INSERT INTO tabela VALUES(1, 2, 2, 13.50, 3);
+INSERT INTO tabela VALUES(1, 3, 3, 15.00, 2);
+INSERT INTO tabela VALUES(1, 4, 4, 10.00, 1);
+INSERT INTO tabela VALUES(1, 5, 5, 30.00, 1);
+INSERT INTO tabela VALUES(2, 1, 3, 15.00, 4);
+INSERT INTO tabela VALUES(2, 2, 4, 10.00, 5);
+INSERT INTO tabela VALUES(2, 3, 5, 30.00, 7);
+INSERT INTO tabela VALUES(3, 1, 1, 25.00, 5);
+INSERT INTO tabela VALUES(3, 2, 4, 10.00, 4);
+INSERT INTO tabela VALUES(3, 3, 5, 30.00, 5);
+INSERT INTO tabela VALUES(3, 4, 2, 13.50, 7);
+INSERT INTO tabela VALUES(4, 1, 5, 30.00, 10, 15);
+INSERT INTO tabela VALUES(4, 2, 4, 10.00, 12, 5);
+INSERT INTO tabela VALUES(4, 3, 1, 25.00, 13, 5);
+INSERT INTO tabela VALUES(4, 4, 2, 13.50, 15, 5);
+INSERT INTO tabela VALUES(5, 1, 3, 15.00, 3);
+INSERT INTO tabela VALUES(5, 2, 5, 30.00, 6);
+INSERT INTO tabela VALUES(6, 1, 1, 25.00, 22, 15);
+INSERT INTO tabela VALUES(6, 2, 3, 15.00, 25, 20);
+INSERT INTO tabela VALUES(7, 1, 1, 25.00, 10, 3);
+INSERT INTO tabela VALUES(7, 2, 2, 13.50, 10, 4);
+INSERT INTO tabela VALUES(7, 3, 3, 15.00, 10, 4);
+INSERT INTO tabela VALUES(7, 4, 5, 30.00, 10, 1);
+
+
+SELECT * FROM tabela;
+
+//item A
+SELECT 
+	id_nf, 
+	id_item, 
+	cod_prod, 
+	valor_unit
+FROM tabela WHERE desconto IS NULL;
+
+
+//item B
+SELECT
+	id_nf, 
+	id_item, 
+	cod_prod, 
+	valor_unit, 
+	CAST(valor_unit - (valor_unit * (desconto/100.00)) AS NUMERIC(5,2)) AS "valor vendido",
+	quantidade
+FROM tabela ORDER BY id_nf;
+
+
+//item C
+UPDATE tabela SET desconto = 0 WHERE desconto IS NULL;
+
+
+//item D
+SELECT 
+	id_nf,
+	id_item,
+	cod_prod,
+	valor_unit,
+	desconto AS "desconto(%)",
+	CAST(valor_unit - (valor_unit * (desconto/100.00)) AS NUMERIC(5,2)) AS "valor vendido",
+	CAST(((valor_unit - (valor_unit * (desconto/100.00))) * quantidade) AS NUMERIC(5,2)) AS "valor total"
+FROM tabela 
+ORDER BY id_nf ASC;
+
+
+//item E
+SELECT
+	id_nf, 
+	CAST(SUM(valor_unit * quantidade) AS NUMERIC(5,2)) AS "valor total"
+FROM tabela
+GROUP BY id_nf
+ORDER BY id_nf ASC;
+
+
+//item F
+SELECT
+	id_nf, 
+	CAST(SUM(((valor_unit - (valor_unit * (desconto/100.00))) * quantidade)) AS NUMERIC(5,2)) AS "valor vendido"
+FROM tabela
+GROUP BY id_nf
+ORDER BY "valor vendido" DESC;
+
+
+//item G
+SELECT 
+	cod_prod,
+	(SELECT MAX(quantidade) FROM tabela)
+FROM tabela
+GROUP BY cod_prod;
+	
+	
+//item H	
+SELECT 
+	id_nf,
+	cod_prod,
+	SUM(quantidade) AS "quantidade"
+FROM tabela WHERE quantidade > 10
+GROUP BY id_nf, cod_prod;
+
+
+//item I
+SELECT
+	id_nf,
+	CAST(SUM(valor_unit * quantidade) AS NUMERIC(5,2)) AS "valor total"
+FROM tabela
+GROUP BY id_nf
+HAVING SUM(valor_unit * quantidade) > 500
+ORDER BY "valor total" DESC;
+
+
+//item J
+SELECT 
+	cod_prod,
+	CAST(AVG(desconto) AS NUMERIC(5,2)) AS "media"
+FROM tabela
+GROUP BY cod_prod
+ORDER BY cod_prod;
+
+
+//item K
+SELECT
+	cod_prod,
+	MIN(desconto) AS "menor",
+	MAX(desconto) AS "maior",
+	CAST(AVG(desconto) AS NUMERIC(5,2)) AS "media"
+FROM tabela
+GROUP BY cod_prod
+ORDER BY cod_prod;
+
+
+//item L
+SELECT
+	id_nf,
+	COUNT(*) AS "Total Itens"
+FROM tabela
+GROUP BY id_nf
+HAVING COUNT(*) > 3
+ORDER BY "Total Itens";
+	

@@ -1,0 +1,17 @@
+A integração dos modelos normalizados é a última etapa da engenharia reversa e tem como objetivo obter o modelo relacional final sobre o sistema em questão
+
+É dividida em 3 passos:
+	
+	1. Integração de tabelas com a mesma chave;
+	2. Integração de tabelas com chave contida;
+	3. Verificação de 3FN.
+
+
+Na primeira etapa integram-se tabelas com domínios de chaves iguais, e não necessariamente o mesmo nome de chave;
+
+Na segunda etapa integram-se tabelas onde uma tabela possuem apenas PK e esta é um subconjunto da PK de outra tabela;
+
+Durante o processo de integração dos modelos, pode ocorrer destes virarem modelos que não estão no 3FN, e isto deve sempre ser corrigido;
+
+Após a validação do modelo, o último passo da engenharia reversa é a construção do modelo ER e a vericação do mesmo.
+

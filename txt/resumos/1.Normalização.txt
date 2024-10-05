@@ -1,0 +1,189 @@
+Engenharia Reversa:
+
+	Engenharia Reversa é aplicada em situações onde a partir de um sistema, atividade ou esquema de arquivos já 	existentes faz-se um modelo relacional de tal e então a partir deste modelo se é possível novamente aplicar a 	engenharia reversa para se obter um modelo ER.
+
+	Entrada:
+		
+		Qualquer conjunto de dados dos quais se disponha de uma descrição. Ex: documentos, arquivos manuais, BD 			gerenciados por SGBD não relacional, etc.
+
+	Se faz extremamente funcional em sistema legados, dos quais são raramente documentados e um modelo ER possibilita 		manutenção, migração para outro tipo de BD e a integração com outros BDS.
+	
+	Passos:
+	
+		1° - Normalização, gerando assim vários modelos relacionais derivados de cada esquema de 				     documento disponível;
+
+		2° - Integração dos modelos relacionais obtidos após a normalização, gerando assim um modelo relacional 		     integrado.
+
+
+
+Normalização:
+
+	É o processo que transforma um esquema de dados em um modelo relacional;
+
+	É executada para todos os esquemas de documentos disponíveis;
+
+	O objetivo da normalização é *reagrupar* informações para eliminar redundância de dados e estruturas inexistentes 	no modelo ER (atributos multivalorados);
+
+	Passos:
+
+		1° Esquema de arquivo ou documento passa a ser representado como tabela não normalizada;
+		2° Aplicação das 4 formas normais, uma por uma, até se obter um esquema relacional normalizado.
+
+	
+	Uma tabela não normalizada (ÑN) é uma tabela que possui colunas com valores não atômicos em sua estrutura, sendo 	estes valores novas tabelas (tabelas aninhadas).
+
+	Exemplo de esquema ÑN: Proj (Codproj, Tipo, Descr., (NomeEmpr, Idade, Salario)).
+
+	
+	Formas Normais:
+
+		São regras que uma tabela deve obedecer para ser considerada bem projetada e esta passe a ser normalizada.
+
+		Existem 4 formas normais: 1FN, 2FN, 3FN e 4FN.
+
+	
+		1FN:
+
+			Uma tabela está na primeira forma normal se esta não possui tabelas aninhadas;
+	
+			Para passar uma tabela ÑN para 1FN basta transformar transformar uma tabela aninhada em uma única 			tabela com todos os atributos presentes nas tabelas aninhadas.
+			
+			Ex: 
+				ÑN: Proj (PKCodproj, Tipo, Descr., (PK NomeEmpr, Idade, Salario)).
+
+			  	1FN: Proj (PK Codproj, PK NomeEmpr, Tipo, Descr., Idade, Salario).
+
+			A PK da tabela 1FN é idêntica à PK da tabela ÑN.
+
+		
+		Dependência Funcional:
+
+			Diz-se que uma coluna C2 depende funcionalmente de uma coluna C1 quando, em todas as linhas da 			tabela, para cada valor de C1 que aparece na tabela, aparece o mesmo valor de C2.
+
+			Exemplo: Toda vez onde uma coluna Codigo tem o valor 1, aparece o valor 5 em uma coluna Idade.
+
+			Uma coluna pode depender funcionalmente de uma combinação de colunas.
+			
+			Dependência funcional parcial ocorre quando uma coluna depende apenas de parte de uma chave 			primária composta.
+
+			Exemplo: 1FN: Proj (PK Codproj, PK NomeEmpr, Tipo, Descr., Idade, Salario) onde as colunas idade e 				 	 salario sempre serao a mesmas para um NomeEmpr.
+
+
+		2FN:
+
+			Uma tabela está na segunda forma normal se esta além de estar na 1FN não possui nenhuma dependência 			parcial.
+
+			Uma tabela 1FN que possui apenas uma coluna como PK ou que possui apenas PK já está na 2FN.
+	
+			Para passar uma tabela 1FN para 2FN:
+
+				1° deve-se analisar as chaves compostas de forma a verificar se as colunas não chave 				   		   dependem de toda a PK ou apenas parte dela;
+
+				2° Cria-se uma nova tabela com estas colunas não chave e a PK das quais dependem 				   funcionalmente.
+
+			Exemplo:
+
+				1FN: Proj (PK Codproj, PK NomeEmpr, Tipo, Descr., Idade, Salario).
+			
+				2FN: Proj (PK Codproj, tipo, Descr.);  
+				     Empregado (PK NomeEmpr, idade, salario);
+				     ProjEmpr(PK Codproj, PK NomeEmpr).
+			
+
+		3FN:
+
+			Uma tabela está na 3FN se esta além de estar na 2FN, não possui depedências funcionais transitivas, 			que ocorre quando uma coluna depende de outra coluna da qual esta depende funcionalmente da PK.
+
+			Exemplo: 2FN: Emp (PK CodEmp, nome, categoria, salario). Na tabela o salario depende da categoria, 				 	 e categoria depende funcionalmente do codEmp.
+
+			Para passar da 2FN para a 3FN:
+
+				1° Analisa as colunas não chave que dependem de outras colunas não chave;
+				
+				2° Cria-se uma nova tabela tendo como PK a coluna não chave que era dependente funcional da 				   PK da antiga tabela e a coluna não chave que era sua dependente.
+
+			Exemplo:
+
+				2FN: Emp (PK CodEmp, nome, categoria, salario).
+			
+				3FN: Emp (PK CodEmp, nome, categoria)
+				     Categoria (PK Categoria, salario).
+
+
+		4FN:
+
+			Uma tabela está na 4FN se esta além de estar na 3FN, não possui dependências multivaloradas, que 			ocorre quando uma PK determina outra coluna da qual possui mais de um valor possível nesta relação
+			
+			Exemplo: Uma tabela Utilização (PK CodProj, PK CodEmp, PK CodEquip) que representa o relacionamento 			ternário entre 3 outras tabelas possui uma dependência multivalorada, pois nesta tabela o conjunto 			das PK 	que importa, podendo acontecer a repetição de valores de 2 chaves e mudar apenas na outra, 			assim as chaves que mudam dependem multivaloradamente da PK que não muda. 
+
+			Para passar da 3FN para 4FN:
+
+				1° Analisa as PK que são dependentes multivaloradas de outra PK;
+				
+				2° Cria-se novas tabelas que não possui mais de um dependente multivalorado.
+	
+			Exemplo:
+
+				3FN: Utilizacao (PK CodProj, PK CodEmp, PK CodEquip)
+
+				4FN: ProjEmp (PK CodProj, PK CodEmp)
+				     ProjEquip (PK CodProj, PK CodEquip)
+
+
+Possíveis problemas na Normalização:	
+
+	Existem três principais possíveis problemas que podem ser encontrados durante o processo de normalização, dentre 	eles:
+	
+		1. Chaves primárias omitidas ou incorretas.
+		2. Atributos relevantes implicitamente representados.
+		3. Atributos irrelevantes, redundantes ou derivados.
+
+
+	Chaves primárias omitidas ou incorretas:
+
+		
+		Em arquivos convencionais o conceito de chave primária não é obrigatório e nestes caso deve-se proceder 			como se a PK aparecesse no arquivo e então inseri-la quando for na forma ÑN.
+
+		Exemplo: Um arquivo com dados sobre empregados de uma organização enviado para fins de fiscalização a um 		órgão governamental.
+
+
+	Atributos relevantes implicitamente representados:
+	
+		Em casos onde atributos relevantes estão implicitamente representados a forma de procedência é tratar como 		se o atributo aparecesse explicitamente no documento.
+
+		Exemplo: Um arquivo que contém registros referentes a cursos em um concurso vestibular e seus candidatos 			que serão ordenados por classificacao.
+	
+		Ex em tabela: ÑN: Candidatos (PK Cod_curso, NomeCurso, VagasCurso, (PK CodCandidato, Nome, ordem)).
+
+		      	      4FN: Candidatos (PK CodCandidato, nome, Cod_curso, ordem);
+			           Curso (PK Cod_curso, NomeCurso, VagasCurso).
+
+
+	Atributos irrelevantes, redundantes ou derivados devem simplesmente serem eliminados das tabelas.	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+

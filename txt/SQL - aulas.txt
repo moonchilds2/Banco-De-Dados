@@ -1,0 +1,21 @@
+Ao criar chaves estrangeiras deve-se fazer o uso de ON DELETE e ON UPDATE para evitar a ocorrencia de erros:
+
+	ações:
+
+		SET NULL 	
+		SET DEFAULT
+		CASCADE (exclui ou altera todos os registros que se relacionam com eles)
+		NO ACTION
+		RESTRICT (nao permite a PK ser excluida)
+
+
+CHECK verifica se o valor inserido é permitido para o atributo. Ex: Dnumero INT NOT NULL CHECK (numero > 0 AND numero < 9);
+
+
+Criar indices para atributos:
+
+	CREATE INDEX nomeAtributo ON nomeTabela (nomeColuna ASC ou DESC) 
+
+
+DISTINCT serve para nao mostrar dados repetidos. Ex: SELECT DISTINCT salario FROM EMPREGADO;
+

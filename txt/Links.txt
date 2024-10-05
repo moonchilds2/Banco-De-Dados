@@ -1,0 +1,34 @@
+LINKS DA DISCIPLINA:
+	
+	Introdução: https://youtu.be/kYwfDqDeZuk  ;   https://youtu.be/Fiu-hxhgMcE  ;  https://youtu.be/P-eTDnc9wiw
+
+	Modelo ER: https://youtu.be/aRQZ4T2qzDU  ;  https://youtu.be/BnB5ublFnMk  ;  https://youtu.be/-7Y8A4M0BvQ  ;  		   https://youtu.be/jSNpecxYqBo  ;  https://youtu.be/iVb2DlW7uyM  ;  https://youtu.be/ICgwvGciHKQ
+
+	Modelo Relacional: https://youtu.be/tbSqM6eVC14  ;  https://youtu.be/rWjBvoSrzx0
+
+	Mapeamento ER: https://youtu.be/yn2O7kVt82A  ;  https://youtu.be/c5KDBwkBNzw
+
+	Normalização: https://youtu.be/gFtWlr8dHmE  ;  https://youtu.be/bCNcGBtf7fs
+
+	SQL:  https://youtu.be/PwA1Lmf9fiM  ;  https://youtu.be/6CHfq-vrsDw
+
+
+
+EXTRAS:
+
+
+Resumo MER e DER - https://www.alura.com.br/artigos/mer-e-der-funcoes
+
+Diferenca modelo vertical e horizontal - https://cursos.alura.com.br/course/modelagem-banco-dados-relacional-modelagem-logica-fisica/task/106987
+
+Dependencias Funcionais - http://www.bosontreinamentos.com.br/modelagem-de-dados/modelagem-de-dados-dependencias/
+
+Tipos de juncoes de tabela no MySQL - https://www.alura.com.br/artigos/join-em-sql
+
+Alternativas de consulta no MySQL - https://www.alura.com.br/artigos/sql-consultas-com-select
+
+Link bom para GROUP BY - https://www.freecodecamp.org/portuguese/news/tutorial-de-group-do-sql-count-sum-average-e-instrucao-having-explicadas/
+
+
+
+

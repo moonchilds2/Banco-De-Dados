@@ -1,0 +1,240 @@
+CREATE TABLE nome_tabela();
+DROP TABLE nome_tabela;
+
+PRIMARY KEY(atributo)
+
+FOREIGN KEY(atributoFK)
+REFERENCES tabela_referenciadora(atributoFK)
+
+
+gerar erro ao tentar alterar item na tabela referenciada sem item existir na tabela referenciadora:
+
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION
+	
+
+alterar tabela adicionando FK:
+
+	ALTER TABLE nome_tabela ADD CONSTRAINT nome_restricao
+	FOREIGN KEY(atributo1)
+	REFERENCES tabela_referenciadora(atributo1)
+	ON DELETE NO ACTION 
+	ON UPDATE NO ACTION
+
+
+
+para inserir os valores dos atributos eh necessario desativar a chave estrangeira: 
+
+	SET FOREIGN_KEY_CHECKS = 0;
+
+
+inserindo os campos nas colunas (em ordem):
+
+	inserindo 1 linha:
+
+		INSERT INTO nome_tabela VALUES (
+		
+			valor_coluna1,
+			valor_coluna2,
+			valor_coluna3
+	
+		);
+
+	
+	inserindo mais de 1 linha:
+
+		INSERT INTO nome_tabela VALUES
+			(valor_coluna1, valor_coluna2, valor_coluna3),
+			(valor_coluna1, valor_coluna2, valor_coluna3),
+			(valor_coluna1, valor_coluna2, valor_coluna3);
+
+
+
+inserindo os campos nas colunas (fora de ordem):
+
+	INSERT INTO nome_tabela (nome_coluna3, nome_coluna2, nome_coluna1) values
+		
+		(valor_coluna3, valor_coluna2, valor_coluna1);
+
+
+
+Consultar linhas de uma tabela:
+
+	SELECT * FROM nome_tabela; (todas as informacoes)
+
+	SELECT nome_coluna FROM nome_tabela; (apenas linhas da coluna nome_coluna)
+
+	SELECT 	nome_coluna AS "apelido_dado" FROM nome_tabela; (msm anterior mas usando apelido na visualizacao)
+
+	SELECT * FROM nome_tabela WHERE nome_coluna = "linha_especifica" AND nome_coluna_int = 10; (pesquisa usando filtro)
+
+	SELECT DISTINCT nome_coluna FROM nome_tabela; (mostra tds as linhas da coluna sem repeticao)
+
+	exemplo filtro usando 2 tabelas:
+
+		SELECT nome_tabela.nome_coluna,
+		       nome_tabela2.nome_coluna2,
+		       sum(nome_tabela.nome_coluna_a_ter_somatorio)
+		FROM nome_tabela, nome_tabela2
+		WHERE nome_tabela.colunaPK = nome_tabela2.colunaPK
+		GROUP BY oqquiser	
+
+
+
+Alterar ou excluir linhas de uma tabela:
+	
+	UPDATE nome_tabela SET nome_coluna = novo_valor WHERE nome_coluna(pk) = valor_especifico;
+
+	DELETE FROM nome_tabela WHERE nome_coluna(pk) = valor_removido;
+
+
+
+
+
+POTSGRE::
+
+
+Atualizar linha:
+
+	UPDATE nome_tabela SET nome_coluna = novo_valor WHERE atributo_especifico = valor;
+
+
+Pesquisar usando apelido:
+	
+	SELECT
+		nome_atributo1,
+		nome_atributo2 AS apelido;
+	FROM tabela;
+
+
+Exemplos de pesquisa com alguns filtros:
+
+	SELECT 
+		id_nf,
+		id_item,
+		cod_prod AS "Codigo do produto",
+		valor_unit AS "Valor",
+		quantidade,
+		CAST((desconto * 100) AS integer) AS "DESCONTO(%)"
+	FROM tabela;
+
+
+	SELECT 
+		id_nf,
+		id_item,
+		cod_prod,
+		valor_unit
+	FROM tabela WHERE desconto IS NULL;
+			
+    
+	SELECT * FROM tabela WHERE aluno LIKE "Di_go";   --> poderia retornar Diego ou Diogo, por exemplo.
+							     (NOT LIKE retornaria o contrario)
+
+
+	SELECT * FROM tabela WHERE aluno LIKE "D%"; --> retornaria qq aluno que comecaria com a letra D;
+
+
+			(OU SEJA, "_" ignora caractere e "%" ignora uma serie de caracteres)
+
+
+	
+	SELECT 
+		cod_prod,
+		(SELECT MAX(quantidade) FROM tabela)		(retornando os produtos que mais venderam em determinada
+	FROM tabela                                              tabela, usando subselect)
+	GROUP BY cod_prod;
+
+	
+
+	SELECT
+		id_nf,
+		CAST(SUM(valor_unit * quantidade) AS NUMERIC(5,2)) AS "valor total"
+	FROM tabela
+	GROUP BY id_nf
+	HAVING SUM(valor_unit * quantidade) > 500
+	ORDER BY "valor total" DESC;
+
+	(HAVING funciona parecidamente com o WHERE mas muda que no WHERE so pode coluna, ja no having pode uma expressao 	 	propria.)
+
+
+	-- O comando LIMIT limita a quantidade de linhas que devem aparecer (LIMIT 5;)
+	-- O comando OFFSET "pula" a quantidade de linhas iniciais da tabela (OFFSET 3;)
+	-- COUNT retorna a quantidade de linhas.
+	-- SUM retorna o somatorio dos registros.
+	-- MAX retorna o maior valor.
+	-- MIN retorna o menor.
+	-- AVG retorna a media aritmetica entre os registros.
+	-- DISTINCT nao repete o atributo desejado. (SELECT DISTINCT atributo)
+
+
+JOIN:
+	No comando abaixo esta selecionando 2 colunas de tabelas diferentes e usando apelido para visualizacao e entao o 	        atributo (aluno_id) que esta presente na relacao entre as 2 tabelas aluno e aluno_curso, e o atributo do curso que           esta presente na outra tabela sao juntados. Le-se "Selecionar atributo nome da tabela aluno, atributo nome da 			tabela curso, do conjunto de tabelas aluno juntamente da tabela aluno_curso onde o id do aluno for igual em ambas 		tabelas, juntamente da tabela curso onde curso.id = aluno_curso.id;
+
+	SELECT 
+		aluno.nome AS "Aluno", 
+		curso.nome AS "Curso"
+	FROM aluno
+	JOIN aluno_curso on aluno.id = aluno_curso.id
+	JOIN curso on curso.id = aluno_curso.id;
+
+
+RIGHT JOIN: 
+	Nesse comando so ha preocupacao com os dados presentes na tabela a esquerda, sem ligar mt se ha ou nao um atributo           atributo ligado na tabela da direita, exemplo:
+
+	SELECT 
+		aluno.nome AS "Aluno", 
+		curso.nome AS "Curso"
+	FROM aluno
+	RIGHT aluno_curso on aluno.id = aluno_curso.id
+	RIGHT curso on curso.id = aluno_curso.id;
+
+	(Nesse caso o importante eh existir o curso, se este curso esta ou nao com um aluno cadastrado nao importa, o curso           sera mostrado e no campo aluno tera o NULL).
+
+
+LEFT JOIN:
+	Neste comando eh quase a mesma logica, sendo que neste caso o importante eh existir o aluno, independentemente se            este aluno esta ligado a algum curso ou nao, e entao seria mostrado o aluno e no campo "curso" teria NULL.
+
+
+
+FULL JOIN:
+	Neste caso mostraria todos os dados de cada campo no join sem se importar se estao ligados ou nao, assim seria               mostrado tanto os campos presentes no left join, quanto os do right join (sem repeticao, claro).
+
+
+CROSS JOIN:
+	
+	SELECT 
+		aluno.nome AS "Aluno", 
+		curso.nome AS "Curso"
+	FROM aluno
+	CROSS JOIN curso;
+
+
+	Neste caso faria uma ligacao de cada aluno para todos os cursos, por exemplo, se existe um aluno Jose (estando ele		cadastrado ou nao em algum curso) no CROSS JOIN seria mostrado uma linha para cada curso sendo q seu aluno 		referenciado seria o Jose.
+
+
+
+
+(FK) DELETE e UPDATE CASCADE:
+
+	No exemplo, quando um aluno da tabela aluno for excluido, automaticamente ele sera excluido tambem da tabela 		aluno_curso por causa do ON DELETE CASCADE.
+
+	No exemplo, quando um atributo do aluno da tabela aluno for alterado, automaticamente o atributo tambem sera 			alterado da tabela aluno_curso por causa do ON UPDATE CASCADE.
+	
+	CREATE TABELA aluno_curso(
+		
+		aluno_id INTEGER,
+		curso_id INTEGER,
+
+		PRIMARY KEY(aluno_id, curso_id)
+
+		FOREIGN KEY(aluno_id) 
+		REFERENCES aluno(id)
+		ON DELETE CASCADE,
+
+		FOREIGN KEY(curso_id)
+		REFERENCES curso(id)
+	
+	);
+
+
+
